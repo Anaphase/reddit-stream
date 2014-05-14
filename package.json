@@ -1,10 +1,10 @@
 {
   "name": "reddit-stream",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "description": "A NodeJS module that provides a constant stream of reddit posts and comments.",
-  "main": "reddit-stream.js",
+  "main": "lib/reddit-stream.js",
   "scripts": {
-    "prepublish": "coffee -o build/ -c src/*.coffee"
+    "prepublish": "rm -rf lib && mkdir -p lib && node_modules/.bin/coffee --bare --output lib/ src/"
   },
   "repository": {
     "type": "git",
@@ -12,11 +12,10 @@
   },
   "keywords": [
     "rereddit",
-    "reddit",
-    "api",
     "reddit-stream",
-    "reddit comments",
-    "reddit posts"
+    "reddit",
+    "reddit posts",
+    "reddit comments"
   ],
   "dependencies": {
     "q": "1.0.1",
