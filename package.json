@@ -1,0 +1,33 @@
+{
+  "name": "reddit-stream",
+  "version": "1.0.1",
+  "description": "A NodeJS module that provides a constant stream of reddit posts and comments.",
+  "main": "reddit-stream.js",
+  "scripts": {
+    "prepublish": "coffee -o build/ -c src/*.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/anaphase/reddit-stream.git"
+  },
+  "keywords": [
+    "rereddit",
+    "reddit",
+    "api",
+    "reddit-stream",
+    "reddit comments",
+    "reddit posts"
+  ],
+  "dependencies": {
+    "q": "1.0.1",
+    "rereddit": "1.0.0"
+  },
+  "devDependencies": {
+    "coffee-script": "1.7.1"
+  },
+  "author": {
+    "name": "Colin Wood",
+    "email": "colinjameswood@gmail.com"
+  },
+  "license": "MIT"
+}
