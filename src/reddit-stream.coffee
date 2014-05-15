@@ -11,8 +11,6 @@ module.exports =
 
 class RedditStream extends events.EventEmitter
   
-  _user = null
-  
   constructor: (@type, @subreddit = 'all', user_agent = 'reddit-stream bot') ->
     reddit.user_agent = user_agent
     unless @type is 'posts' or @type is 'comments'
@@ -24,12 +22,12 @@ class RedditStream extends events.EventEmitter
     
     request = reddit.login username, password
     
-    request.end (error, response) ->
+    request.end (error, response) =>
       if error?
         deferred.reject error
       else
-        deferred.resolve response
-        _user = response
+        @user = response
+        deferred.resolve @user
     
     deferred.promise
   
@@ -44,7 +42,7 @@ class RedditStream extends events.EventEmitter
       request = reddit.read "#{@subreddit}/comments"
     
     request.limit LIMIT
-    request.as _user if _user?
+    request.as @user if @user?
     request.after after if after isnt ''
     
     request.end (error, response, user, res) =>
