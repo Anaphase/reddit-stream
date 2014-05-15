@@ -37,8 +37,9 @@ comment_stream.on 'new', (comments) ->
 The RedditStream class's constructor accepts three parameters:
 
 1. `type` - the type of item to stream from reddit; either "comments" or "posts"
-2. `subreddit` - the subreddit to read items from; default is "all"
-3. `user_agent` - reddit suggests supplying a unique user agent for all bots; default is "reddit-stream bot"
+2. `subreddit` - (optional) the subreddit to read items from; default is "all"
+3. `user_agent` - (optional) reddit suggests supplying a unique user agent for all bots; default is "reddit-stream bot"
+4. `user` - (optional) a [rereddit](https://github.com/chuckpreslar/rereddit) user object if you've already logged in outside of this module
 
 ## License
 

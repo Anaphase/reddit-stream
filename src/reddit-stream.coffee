@@ -11,23 +11,26 @@ module.exports =
 
 class RedditStream extends events.EventEmitter
   
-  constructor: (@type, @subreddit = 'all', user_agent = 'reddit-stream bot') ->
+  constructor: (@type, @subreddit = 'all', user_agent = 'reddit-stream bot', @user = null) ->
     reddit.user_agent = user_agent
     unless @type is 'posts' or @type is 'comments'
       throw new Error 'type must be "posts" or "comments"'
   
-  login: (username, password) ->
+  login: (username, password, force = no) ->
     
     deferred = q.defer()
     
-    request = reddit.login username, password
-    
-    request.end (error, response) =>
-      if error?
-        deferred.reject error
-      else
-        @user = response
-        deferred.resolve @user
+    if @user? and not force
+      deferred.resolve @user
+    else
+      request = reddit.login username, password
+      
+      request.end (error, response) =>
+        if error?
+          deferred.reject error
+        else
+          @user = response
+          deferred.resolve @user
     
     deferred.promise
   
