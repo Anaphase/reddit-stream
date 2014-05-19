@@ -53,7 +53,7 @@ class RedditStream extends events.EventEmitter
       items = response?.data?.children
       
       if error? or not items?
-        console.error error, response if error?
+        console.error 'could not get items:', error, response if error?
         # console.warn "bad request #{attempt}/5"
         if ++attempt <= MAX_ATTEMPTS
           setTimeout (=> @getItems newest, last_newest, after, attempt, is_backtracking), POLL_INTERVAL
