@@ -53,6 +53,7 @@ class RedditStream extends events.EventEmitter
       items = response?.data?.children
       
       if error? or not items?
+        console.error 'error on', (new Date())
         console.error 'could not get items:', error, response if error?
         # console.warn "bad request #{attempt}/5"
         if ++attempt <= MAX_ATTEMPTS
