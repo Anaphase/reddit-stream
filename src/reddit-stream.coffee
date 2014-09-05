@@ -29,10 +29,10 @@ class RedditStream extends events.EventEmitter
     reddit.auth { username: auth.username, password: auth.password }, (error, response) =>
       if error?
         deferred.reject error
-        @emit 'login-error', error
+        @emit 'login.error', error
       else
         deferred.resolve response
-        @emit 'login-success', response
+        @emit 'login.success', response
     
     deferred.promise
   
