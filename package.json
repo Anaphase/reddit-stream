@@ -19,7 +19,7 @@
   ],
   "dependencies": {
     "q": "1.0.1",
-    "rereddit": "1.0.0"
+    "raw.js": "0.2.2"
   },
   "devDependencies": {
     "coffee-script": "1.7.1"

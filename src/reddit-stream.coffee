@@ -1,6 +1,7 @@
 q = require 'q'
+rawjs = require 'raw.js'
 events = require 'events'
-reddit = require 'rereddit'
+reddit = new rawjs()
 
 LIMIT = 100 # number of items to retrieve per request
 MAX_ATTEMPTS = 5 # number of attempts to try an API call before giving up
@@ -11,26 +12,27 @@ module.exports =
 
 class RedditStream extends events.EventEmitter
   
-  constructor: (@type, @subreddit = 'all', user_agent = 'reddit-stream bot', @user = null) ->
-    reddit.user_agent = user_agent
+  constructor: (@type, @subreddit = 'all', user_agent = 'reddit-stream bot', auth = null) ->
     unless @type is 'posts' or @type is 'comments'
       throw new Error 'type must be "posts" or "comments"'
+    reddit._userAgent = user_agent
+    @login auth if auth?
   
-  login: (username, password, force = no) ->
+  login: (auth) ->
+    
+    unless auth.app?.id? and auth.app?.secret? and auth.username? and auth.password?
+      throw new Error 'auth object must have app.id, app.secret, username, and password'
     
     deferred = q.defer()
     
-    if @user? and not force
-      deferred.resolve @user
-    else
-      request = reddit.login username, password
-      
-      request.end (error, response) =>
-        if error?
-          deferred.reject error
-        else
-          @user = response
-          deferred.resolve @user
+    reddit.setupOAuth2 auth.app.id, auth.app.secret
+    reddit.auth { username: auth.username, password: auth.password }, (error, response) =>
+      if error?
+        deferred.reject error
+        @emit 'login-error', error
+      else
+        deferred.resolve response
+        @emit 'login-success', response
     
     deferred.promise
   
@@ -39,18 +41,17 @@ class RedditStream extends events.EventEmitter
   
   getItems: (newest = '', last_newest = '', after = '', attempt = 1, is_backtracking = no) =>
     
-    if @type is 'posts'
-      request = reddit.read "#{@subreddit}/new"
-    else if @type is 'comments'
-      request = reddit.read "#{@subreddit}/comments"
+    options =
+      r: @subreddit
+      limit: LIMIT
+      after: after if after isnt ''
     
-    request.limit LIMIT
-    request.as @user if @user?
-    request.after after if after isnt ''
-    
-    request.end (error, response, user, res) =>
+    callback = (error, response) =>
       
-      items = response?.data?.children
+      if @type is 'posts'
+        items = response?.children?
+      else if @type is 'comments'
+        items = response?.data?.children
       
       if error? or not items?
         console.error 'error on', (new Date())
@@ -97,3 +98,8 @@ class RedditStream extends events.EventEmitter
           if should_backtrack
             setTimeout (=> @getItems newest, last_newest, after, 1, yes), 0
           setTimeout (=> @getItems newest, last_newest), POLL_INTERVAL
+    
+    if @type is 'posts'
+      reddit.new options, callback
+    else if @type is 'comments'
+      reddit.comments options, callback
