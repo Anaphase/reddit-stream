@@ -38,6 +38,7 @@ class RedditStream extends events.EventEmitter
   
   start: ->
     @getItems()
+    @emit 'start'
   
   getItems: (newest = '', last_newest = '', after = '', attempt = 1, is_backtracking = no) =>
     
@@ -54,12 +55,16 @@ class RedditStream extends events.EventEmitter
         items = response?.data?.children
       
       if error? or not items?
-        console.error 'error on', (new Date())
         if error?
-          console.error 'could not get items (error):', error, response
+          @emit 'error',
+            message: 'could not get items (error)'
+            response: response
+            error: error
         else
-          console.error 'could not get items (empty response):', response
-        # console.warn "bad request #{attempt}/${MAX_ATTEMPTS}"
+          @emit 'error',
+            message: 'could not get items (empty response):'
+            response: response
+            error: error
         if ++attempt <= MAX_ATTEMPTS
           setTimeout (=> @getItems newest, last_newest, after, attempt, is_backtracking), POLL_INTERVAL
         else unless is_backtracking
