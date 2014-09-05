@@ -2,7 +2,7 @@
 
 ## About
 
-reddit-stream is a NodeJS module that provides a constant stream of posts and comments from reddit. This module uses [rereddit](https://github.com/chuckpreslar/rereddit) to retrieve data from reddit.
+reddit-stream is a NodeJS module that provides a constant stream of posts and comments from reddit. This module uses [raw.js](https://bitbucket.org/Doctor_McKay/raw.js) to retrieve data from reddit.
 
 ## Usage
 
@@ -20,7 +20,14 @@ RedditStream = require 'reddit-stream'
 comment_stream = new RedditStream 'comments', 'all', 'unique user agent for my-supercool-bot'
 
 # optionally log in
-comment_stream.login('my-supercool-bot', 'password').then(
+auth =
+  username: 'my-supercool-bot'
+  password: 'password'
+  app:
+    id: 'your-app-id'
+    secret: 'your-app-secret'
+
+comment_stream.login(auth).then(
   ->
     console.log 'logged in for comment stream'
     comment_stream.start()
@@ -28,9 +35,11 @@ comment_stream.login('my-supercool-bot', 'password').then(
     console.log 'failed to log in!'
 )
 
+# do stuff with new items here
 comment_stream.on 'new', (comments) ->
   console.log 'found', comments.length, 'comment(s)'
 ```
+If you wish to log in but do not have a reddit app created, visit [this page](https://ssl.reddit.com/prefs/apps/) and create a new "script" application to obtain an app id & secret. Put whatever you want in "redirect uri" as it will not be used.
 
 ## RedditStream Parameters
 
@@ -39,7 +48,7 @@ The RedditStream class's constructor accepts three parameters:
 1. `type` - the type of item to stream from reddit; either "comments" or "posts"
 2. `subreddit` - (optional) the subreddit to read items from; default is "all"
 3. `user_agent` - (optional) reddit suggests supplying a unique user agent for all bots; default is "reddit-stream bot"
-4. `user` - (optional) a [rereddit](https://github.com/chuckpreslar/rereddit) user object if you've already logged in outside of this module
+4. `auth` - (optional) an object containing login credentials (see example above). If you use this parameter instead of the login() method, listen to the `login.success` and `login.error` events to know when you should call the start() method
 
 ## License
 
