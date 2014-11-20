@@ -50,7 +50,7 @@ class RedditStream extends events.EventEmitter
     callback = (error, response) =>
       
       if @type is 'posts'
-        items = response?.children?
+        items = response?.children
       else if @type is 'comments'
         items = response?.data?.children
       
