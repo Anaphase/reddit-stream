@@ -14,14 +14,14 @@ class RedditStream extends events.EventEmitter
   
   constructor: (@type, @subreddit = 'all', user_agent = 'reddit-stream bot', auth = null) ->
     unless @type is 'posts' or @type is 'comments'
-      throw new Error 'type must be "posts" or "comments"'
+      throw new Error('type must be "posts" or "comments"')
     reddit._userAgent = user_agent
     @login auth if auth?
   
   login: (auth) ->
     
     unless auth.app?.id? and auth.app?.secret? and auth.username? and auth.password?
-      throw new Error 'auth object must have app.id, app.secret, username, and password'
+      throw new Error('auth object must have app.id, app.secret, username, and password')
     
     deferred = q.defer()
     
@@ -86,7 +86,7 @@ class RedditStream extends events.EventEmitter
             last_newest = newest
             newest = items[0].data.name
           
-          after = items[items.length-1].data.name
+          after = items[items.length - 1].data.name
         
         if new_items.length > 0
           @emit 'new', new_items
