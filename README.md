@@ -31,6 +31,19 @@ comment_stream.login(auth).then(
   ->
     console.log 'logged in for comment stream'
     comment_stream.start()
+    
+    # you can stop the stream later...
+    setTimeout ->
+      
+      comment_stream.stop()
+      
+      # ...and restart it again even later!
+      setTimeout ->
+        comment_stream.start()
+      , 60 * 1000
+      
+    , 60 * 1000
+    
   ->
     console.log 'failed to log in!'
 )
