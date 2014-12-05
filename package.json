@@ -1,6 +1,6 @@
 {
   "name": "reddit-stream",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A NodeJS module that provides a constant stream of reddit posts and comments.",
   "main": "lib/reddit-stream.js",
   "scripts": {
