@@ -54,6 +54,20 @@ comment_stream.on 'new', (comments) ->
 ```
 If you wish to log in but do not have a reddit app created, visit [this page](https://ssl.reddit.com/prefs/apps/) and create a new "script" application to obtain an app id & secret. Put whatever you want in "redirect uri" as it will not be used.
 
+If you wish to get a stream without logging in, you can do:
+
+```javascript
+var RedditStream = require('reddit-stream');
+
+var comment_stream = new RedditStream('comments', 'all', 'unique user agent for my-supercool-bot');
+
+comment_stream.start();
+
+comment_stream.on('new', function(comments) {
+  console.log('found', comments.length, 'comment(s)');
+});
+```
+
 ## RedditStream Parameters
 
 The RedditStream class's constructor accepts three parameters:
